@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>todoList</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/jquery/jquery-3.4.1.js" type="text/javascript"></script>
+    <script src="/javascripts/vue.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.min.css">
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <div id="content">
+        <!-- start title_bar -->
+        <div id="title_bar" class="dis_center" style="width:100%;height:45px;_background-color: blanchedalmond;border-bottom-color: gray;border-bottom-style: solid;border-bottom-width: 1px;">
+          <div class="dis_center" style="width:200px;">
+              <div class="txt_center" style="font-size: 20px;padding-top:8px;">{{ title_bar }}</div>
+          </div>
+        </div>
+        <!-- end title_bar -->
+        
+        <!-- start ctr -->
+        <div style="width:100%;height:45px;_background-color:yellowgreen;padding:5px;">
+            <div class="input-group">
+                <input type="text" class="form-control" ref="add_todoitem" v-model="inputValue">
+                <span class="input-group-btn">
+                  <button class="btn btn-success" type="button" v-on:click="addItem">添 加</button>
+                </span>
+              </div>
+          </div>
+        <!-- end ctr -->
+
+        <!-- start todolist -->
+        <div>
+          <div>
+            <div>
+              <ol>
+                <todo-item 
+                v-for="(item,index) in todos"
+                v-bind:todo="item"
+                v-bind:index="index"
+                b-bind:key="index"
+                @delete="delItem"
+                ></todo-item>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <!-- end todolist -->
+      </div>
+    </div>
+
+    <script>
+      Vue.component('todo-item', {
+        props: ['todo',"index"],
+        template: '<li class="todo-item" @click="handleClick">{{ todo.text }}</li>',
+        methods: {
+          handleClick: function(e){
+            if(confirm("确定删除该条清单吗？")){
+              this.$emit("delete",this.index)
+            }else{
+              // alert($(e.target).text())
+            }
+          }
+        }
+      })
+
+      var app = new Vue({
+        el: "#root",
+        data: {
+          title_bar: "事务清单",
+          inputValue: "hello",
+          todos: [
+            
+          ]
+        },
+        methods: {
+          addItem: function(){
+            this.todos.push({text: this.$refs.add_todoitem.value})
+            this.inputValue = ""
+          },
+          delItem: function(index){
+            this.todos.splice(index,1)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
